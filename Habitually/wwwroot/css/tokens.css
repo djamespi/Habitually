@@ -126,6 +126,13 @@
   /* Empty state */
   --space-empty-y:              96px;
 
+  /* Sidebar */
+  --sidebar-width:              256px;
+  --sidebar-px:                 16px;
+  --sidebar-py:                 24px;
+  --sidebar-footer-width:       216px;
+  --sidebar-footer-inset:       4px;
+
   /* ---- Radius ---- */
   --radius-card:                14px;
   --radius-lg:                  16px;

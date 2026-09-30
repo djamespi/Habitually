@@ -47,6 +47,21 @@ a {
   text-decoration: none;
 }
 
+/* ---- Page title ---- */
+/* Used on every page: 48px display font with gradient text */
+.page-title {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  /* Gradient text: foreground → primary */
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ---- Blazor framework UI (keep these) ---- */
 
 #blazor-error-ui {
