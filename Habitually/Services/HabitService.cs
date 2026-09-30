@@ -41,6 +41,47 @@ public class HabitService
         return _entries.Any(e => e.HabitId == habitId && e.Date == date);
     }
 
+    /// <summary>How many habits exist.</summary>
+    public int GetHabitCount() => _habits.Count;
+
+    /// <summary>How many habits were completed today.</summary>
+    public int GetTodayCompletedCount()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        return _habits.Count(h => IsCompleted(h.Id, today));
+    }
+
+    // ── Streak methods (delegate to StreakCalculator) ──────────────
+
+    /// <summary>Current streak for a single habit.</summary>
+    public int GetCurrentStreak(Guid habitId)
+    {
+        var dates = _entries.Where(e => e.HabitId == habitId).Select(e => e.Date);
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        return StreakCalculator.GetCurrentStreak(dates, today);
+    }
+
+    /// <summary>Longest streak ever for a single habit.</summary>
+    public int GetLongestStreak(Guid habitId)
+    {
+        var dates = _entries.Where(e => e.HabitId == habitId).Select(e => e.Date);
+        return StreakCalculator.GetLongestStreak(dates);
+    }
+
+    /// <summary>Highest current streak across all habits (shown on Dashboard).</summary>
+    public int GetOverallCurrentStreak()
+    {
+        if (_habits.Count == 0) return 0;
+        return _habits.Max(h => GetCurrentStreak(h.Id));
+    }
+
+    /// <summary>Highest longest streak across all habits (shown on Dashboard).</summary>
+    public int GetOverallLongestStreak()
+    {
+        if (_habits.Count == 0) return 0;
+        return _habits.Max(h => GetLongestStreak(h.Id));
+    }
+
     // ── Write methods ──────────────────────────────────────────────
 
     /// <summary>
@@ -143,44 +184,121 @@ public class HabitService
     }
 
     /// <summary>
-    /// Generates ~6 months of realistic sample entries up to today.
-    /// Each habit has a different base completion rate so the heatmap
-    /// and stats look varied. A fixed seed (42) keeps the data stable.
-    /// Recent days form believable streaks by boosting the rate.
+    /// Generates ~6 months of sample entries whose recent streaks match the
+    /// Figma Dashboard screenshot exactly:
+    ///
+    ///   Morning workout    — streak  1, NOT done today   (yesterday only)
+    ///   Read 20 pages      — streak  6, NOT done today   (days -1 to -6)
+    ///   Drink 2L water     — streak 24, done today       (days  0 to -23)
+    ///                        longest streak = 25          (days -50 to -26)
+    ///   Meditate           — streak  1, NOT done today   (yesterday only)
+    ///   No late-night…     — streak 10, done today       (days  0 to -9)
+    ///   Study session      — streak  7, done today       (days  0 to -6)
+    ///
+    ///   Today completions: 3 of 6
+    ///   Overall current streak:  24 (Drink 2L water)
+    ///   Overall longest streak:  25 (Drink 2L water)
+    ///
+    /// Older history is filled randomly with a fixed seed (42).
     /// </summary>
     private void SeedEntries()
     {
-        var rng = new Random(42);   // fixed seed → same data every run
+        var rng   = new Random(42);   // fixed seed → same data every run
         var today = DateOnly.FromDateTime(DateTime.Now);
         var start = today.AddDays(-180);  // roughly 6 months back
 
-        // Base completion probability for each habit (index matches _habits order).
-        // These are tuned so the Dashboard screenshot looks realistic.
-        double[] baseRates = { 0.50, 0.80, 0.85, 0.65, 0.75, 0.78 };
-
-        for (int i = 0; i < _habits.Count; i++)
+        // ── Per-habit seeding configuration ────────────────────────
+        // currentStreak   = how many recent consecutive days to force ON
+        // doneToday       = whether today is included in the streak
+        // longestOverride = if > 0, place an exact run of this length earlier
+        // baseRate        = probability for random older days
+        var configs = new[]
         {
-            var habit = _habits[i];
-            var baseRate = baseRates[i];
+            // Morning workout — streak 1, not done today
+            new { Habit = _habits[0], CurrentStreak =  1, DoneToday = false,
+                  LongestOverride = 0,  BaseRate = 0.50 },
 
-            // Walk through each day from start to today
+            // Read 20 pages — streak 6, not done today
+            new { Habit = _habits[1], CurrentStreak =  6, DoneToday = false,
+                  LongestOverride = 0,  BaseRate = 0.80 },
+
+            // Drink 2L water — streak 24, done today, longest 25
+            new { Habit = _habits[2], CurrentStreak = 24, DoneToday = true,
+                  LongestOverride = 25, BaseRate = 0.70 },
+
+            // Meditate — streak 1, not done today
+            new { Habit = _habits[3], CurrentStreak =  1, DoneToday = false,
+                  LongestOverride = 0,  BaseRate = 0.60 },
+
+            // No late-night screens — streak 10, done today
+            new { Habit = _habits[4], CurrentStreak = 10, DoneToday = true,
+                  LongestOverride = 0,  BaseRate = 0.70 },
+
+            // Study session — streak 7, done today
+            new { Habit = _habits[5], CurrentStreak =  7, DoneToday = true,
+                  LongestOverride = 0,  BaseRate = 0.75 },
+        };
+
+        foreach (var cfg in configs)
+        {
+            var habitId = cfg.Habit.Id;
+
+            // -- 1. Determine the "controlled zone" --
+            // These are recent days where we force entries ON/OFF to
+            // produce the exact current streak.
+            // If done today, streak covers days 0..-( streak-1 ).
+            // If not done today, streak covers days -1..-(streak).
+            int streakEndOffset   = cfg.DoneToday ? 0 : -1;
+            int streakStartOffset = streakEndOffset - cfg.CurrentStreak + 1;
+            // The day just before the streak must be OFF (to "break" it)
+            int breakDayOffset    = streakStartOffset - 1;
+
+            // -- 2. Determine the "longest override zone" --
+            // For Drink 2L water we place a 25-day run earlier in history.
+            // Position it so it does not overlap the current streak zone.
+            int overrideStart = 0, overrideEnd = 0;
+            if (cfg.LongestOverride > 0)
+            {
+                // Place it ending 2 days before the break day
+                overrideEnd   = breakDayOffset - 2;
+                overrideStart = overrideEnd - cfg.LongestOverride + 1;
+            }
+
+            // -- 3. Walk every day from start to today --
             for (var day = start; day <= today; day = day.AddDays(1))
             {
-                // Boost the rate for the most recent 30 days to create
-                // believable current streaks (habits feel "active lately").
-                int daysAgo = today.DayNumber - day.DayNumber;
-                double rate = daysAgo < 30
-                    ? Math.Min(baseRate + 0.15, 0.97)   // boosted recent window
-                    : baseRate;
+                int offset = day.DayNumber - today.DayNumber; // 0 = today, -1 = yesterday…
+                bool shouldAdd;
 
-                // Roll the dice — if under the rate, the habit was done that day
-                if (rng.NextDouble() < rate)
+                if (offset == breakDayOffset)
                 {
-                    _entries.Add(new HabitEntry
-                    {
-                        HabitId = habit.Id,
-                        Date    = day
-                    });
+                    // Force OFF — this breaks the streak cleanly
+                    shouldAdd = false;
+                }
+                else if (offset >= streakStartOffset && offset <= streakEndOffset)
+                {
+                    // Inside the current streak zone — force ON
+                    shouldAdd = true;
+                }
+                else if (cfg.LongestOverride > 0 && offset >= overrideStart && offset <= overrideEnd)
+                {
+                    // Inside the longest-streak override zone — force ON
+                    shouldAdd = true;
+                }
+                else if (cfg.LongestOverride > 0 && offset == overrideStart - 1)
+                {
+                    // Force OFF just before the override zone too
+                    shouldAdd = false;
+                }
+                else
+                {
+                    // Random history — use the base rate
+                    shouldAdd = rng.NextDouble() < cfg.BaseRate;
+                }
+
+                if (shouldAdd)
+                {
+                    _entries.Add(new HabitEntry { HabitId = habitId, Date = day });
                 }
             }
         }
