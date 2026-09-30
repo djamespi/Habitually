@@ -1,0 +1,62 @@
+@* HabitCheckItem.razor — A single habit row with custom checkbox, emoji, name,
+   and streak indicator. Clicking the row toggles completion for today. *@
+
+<div class="habit-row @(IsCompleted ? "completed" : "")"
+     style="--habit-color: @Habit.Color"
+     @onclick="HandleClick">
+
+    @* Custom checkbox: rounded square, fills with habit color when checked *@
+    <div class="checkbox @(IsCompleted ? "checked" : "") @(_animating ? "pop" : "")">
+        @if (IsCompleted)
+        {
+            <svg class="checkmark" viewBox="0 0 16 16" fill="none">
+                <polyline points="3.5 8 6.5 11 12.5 5"
+                          stroke="white" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        }
+    </div>
+
+    @* Emoji and habit name *@
+    <span class="habit-emoji">@Habit.Emoji</span>
+    <span class="habit-name">@Habit.Name</span>
+
+    @* Streak indicator on the right *@
+    <span class="streak-fire">🔥</span>
+    <span class="streak-count">@Streak</span>
+</div>
+
+@code {
+    /// <summary>The habit model (name, emoji, color).</summary>
+    [Parameter] public Habitually.Models.Habit Habit { get; set; } = default!;
+
+    /// <summary>Whether this habit is completed today.</summary>
+    [Parameter] public bool IsCompleted { get; set; }
+
+    /// <summary>Current streak count for this habit.</summary>
+    [Parameter] public int Streak { get; set; }
+
+    /// <summary>Callback to toggle this habit's completion.</summary>
+    [Parameter] public EventCallback OnToggle { get; set; }
+
+    // Tracks whether the checkbox pop animation should play
+    private bool _animating;
+
+    /// <summary>Handle click: toggle completion and animate if checking on.</summary>
+    private async Task HandleClick()
+    {
+        bool willCheck = !IsCompleted;
+
+        // Tell the parent to toggle completion in HabitService
+        await OnToggle.InvokeAsync();
+
+        // Play the pop animation only when checking ON
+        if (willCheck)
+        {
+            _animating = true;
+            StateHasChanged();
+            await Task.Delay(320);   // match the 0.32s animation duration
+            _animating = false;
+        }
+    }
+}

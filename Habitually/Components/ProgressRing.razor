@@ -1,0 +1,71 @@
+@* ProgressRing.razor — SVG circular progress ring with gradient stroke.
+   Shows completion percentage, count, and an encouraging message. *@
+
+<div class="ring-wrapper">
+    @* SVG ring *@
+    <svg class="ring-svg" viewBox="0 0 200 200">
+        <defs>
+            @* Gradient for the progress stroke: primary → pink *@
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" style="stop-color: var(--color-primary)" />
+                <stop offset="100%" style="stop-color: var(--color-gradient-partner)" />
+            </linearGradient>
+        </defs>
+
+        @* Background track (full circle, muted color) *@
+        <circle class="ring-track"
+                cx="100" cy="100" r="@Radius"
+                fill="none"
+                stroke-width="@StrokeWidth" />
+
+        @* Progress arc (gradient stroke, animated) *@
+        <circle class="ring-progress"
+                cx="100" cy="100" r="@Radius"
+                fill="none"
+                stroke="url(#ringGrad)"
+                stroke-width="@StrokeWidth"
+                stroke-linecap="round"
+                stroke-dasharray="@Circumference"
+                style="stroke-dashoffset: @DashOffset"
+                transform="rotate(-90 100 100)" />
+    </svg>
+
+    @* Centered text overlay *@
+    <div class="ring-text">
+        <span class="ring-percent">@Percentage%</span>
+        <span class="ring-count">@Completed of @Total</span>
+    </div>
+</div>
+
+@* Encouraging message below the ring *@
+<p class="ring-message">@GetMessage()</p>
+
+@code {
+    /// <summary>Number of habits completed today.</summary>
+    [Parameter] public int Completed { get; set; }
+
+    /// <summary>Total number of habits.</summary>
+    [Parameter] public int Total { get; set; }
+
+    // SVG geometry constants
+    private const int Radius = 78;
+    private const int StrokeWidth = 14;
+    private const double TwoPI = 2 * Math.PI;
+
+    // Calculated values for the SVG stroke-dasharray trick
+    private double Circumference => TwoPI * Radius;   // ≈ 490
+    private int Percentage => Total > 0 ? (int)Math.Round(100.0 * Completed / Total) : 0;
+    private double DashOffset => Circumference * (1.0 - (Total > 0 ? (double)Completed / Total : 0));
+
+    /// <summary>Pick an encouraging message based on the percentage.</summary>
+    private string GetMessage()
+    {
+        return Percentage switch
+        {
+            0         => "Start small. One habit counts.",
+            < 50      => "Good start. Keep going.",
+            100       => "All done. Great work today!",
+            _         => "You're over halfway. Keep going."
+        };
+    }
+}

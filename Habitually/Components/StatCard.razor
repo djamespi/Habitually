@@ -1,0 +1,30 @@
+@* StatCard.razor — Displays a single stat (e.g. streak) with a colored accent line and emoji.
+   Used on the Dashboard for "Current Streak" and "Longest Streak". *@
+
+<div class="stat-card card" style="--stat-color: @AccentColor">
+    @* Top row: uppercase label on the left, emoji on the right *@
+    <div class="stat-top">
+        <span class="stat-label">@Label</span>
+        <span class="stat-emoji">@Emoji</span>
+    </div>
+
+    @* Bottom row: big colored number + "days" unit *@
+    <div class="stat-value-row">
+        <span class="stat-number">@Value</span>
+        <span class="stat-unit">days</span>
+    </div>
+</div>
+
+@code {
+    /// <summary>Uppercase label, e.g. "CURRENT STREAK".</summary>
+    [Parameter] public string Label { get; set; } = "";
+
+    /// <summary>The numeric value to display large.</summary>
+    [Parameter] public int Value { get; set; }
+
+    /// <summary>Emoji shown at the top right, e.g. "🔥".</summary>
+    [Parameter] public string Emoji { get; set; } = "";
+
+    /// <summary>CSS color for the accent line and number, e.g. "var(--color-streak-current)".</summary>
+    [Parameter] public string AccentColor { get; set; } = "var(--color-primary)";
+}

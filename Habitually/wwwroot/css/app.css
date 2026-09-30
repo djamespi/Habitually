@@ -31,7 +31,7 @@ ul, ol {
 }
 
 /* Images behave as block and scale down */
-img, svg {
+img {
   display: block;
   max-width: 100%;
 }
@@ -60,6 +60,22 @@ a {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ---- Card base ---- */
+/* Shared card appearance used across multiple components */
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-card);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(var(--card-hover-lift));
 }
 
 /* ---- Blazor framework UI (keep these) ---- */

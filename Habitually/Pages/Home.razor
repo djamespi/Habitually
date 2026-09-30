@@ -1,6 +1,99 @@
-@* Dashboard.razor — Dashboard page (empty shell for now) *@
+@* Dashboard page — The main landing page of Habitually.
+   Shows today's date, a greeting, streak stats, a habit checklist,
+   and a circular progress ring. Refreshes live when habits are toggled. *@
+
 @page "/"
+@using Habitually.Models
+@using Habitually.Services
+@inject HabitService HabitService
+@implements IDisposable
 
 <PageTitle>Dashboard</PageTitle>
 
-<h1 class="page-title">Dashboard</h1>
+@* ── Date line with small primary dot ── *@
+<div class="date-line">
+    <span class="date-dot"></span>
+    <span class="date-text">@DateTime.Now.ToString("ddd, MMM d, yyyy")</span>
+</div>
+
+@* ── Time-based greeting with gradient text ── *@
+<h1 class="greeting">@GetGreeting()<span class="greeting-dot">.</span></h1>
+
+@* ── Dashboard grid ── *@
+<div class="dashboard-grid">
+
+    @* Current streak stat card (red / danger accent) *@
+    <StatCard Label="CURRENT STREAK"
+              Value="@HabitService.GetOverallCurrentStreak()"
+              Emoji="🔥"
+              AccentColor="var(--color-streak-current)" />
+
+    @* Longest streak stat card (amber accent) *@
+    <StatCard Label="LONGEST STREAK"
+              Value="@HabitService.GetOverallLongestStreak()"
+              Emoji="🏆"
+              AccentColor="var(--color-streak-longest)" />
+
+    @* Today progress card (right column, spans both rows) *@
+    <div class="card today-card">
+        <h2 class="today-title">Today</h2>
+        <ProgressRing Completed="@HabitService.GetTodayCompletedCount()"
+                      Total="@HabitService.GetHabitCount()" />
+    </div>
+
+    @* Today's habits checklist card *@
+    <div class="card habits-card">
+        <div class="habits-header">
+            <h2 class="habits-title">Today's habits</h2>
+            <span class="habits-count">
+                @HabitService.GetTodayCompletedCount()/@HabitService.GetHabitCount() done
+            </span>
+        </div>
+
+        <div class="habits-list">
+            @foreach (var habit in _habits)
+            {
+                <HabitCheckItem Habit="@habit"
+                                IsCompleted="@HabitService.IsCompleted(habit.Id, _today)"
+                                Streak="@HabitService.GetCurrentStreak(habit.Id)"
+                                OnToggle="@(() => ToggleHabit(habit.Id))" />
+            }
+        </div>
+    </div>
+
+</div>
+
+@code {
+    private List<Habit> _habits = new();
+    private DateOnly _today;
+
+    protected override void OnInitialized()
+    {
+        _today = DateOnly.FromDateTime(DateTime.Now);
+        _habits = HabitService.GetHabits();
+
+        // Subscribe so the page re-renders when data changes (checkbox toggle)
+        HabitService.OnChange += StateHasChanged;
+    }
+
+    /// <summary>Toggle a habit's completion for today.</summary>
+    private void ToggleHabit(Guid habitId)
+    {
+        HabitService.ToggleCompletion(habitId, _today);
+    }
+
+    /// <summary>Return a greeting based on the current hour.</summary>
+    private string GetGreeting()
+    {
+        var hour = DateTime.Now.Hour;
+        if (hour < 12) return "Good morning";
+        if (hour < 17) return "Good afternoon";
+        return "Good evening";
+    }
+
+    /// <summary>Unsubscribe to avoid memory leaks.</summary>
+    public void Dispose()
+    {
+        HabitService.OnChange -= StateHasChanged;
+    }
+}
