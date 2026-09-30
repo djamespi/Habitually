@@ -285,6 +285,11 @@ public class HabitService
                     // Inside the longest-streak override zone — force ON
                     shouldAdd = true;
                 }
+                else if (cfg.LongestOverride > 0 && offset == overrideEnd + 1)
+                {
+                    // Force OFF immediately after the override to cap its length
+                    shouldAdd = false;
+                }
                 else if (cfg.LongestOverride > 0 && offset == overrideStart - 1)
                 {
                     // Force OFF just before the override zone too

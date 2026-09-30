@@ -15,15 +15,13 @@
         @* Background track (full circle, muted color) *@
         <circle class="ring-track"
                 cx="100" cy="100" r="@Radius"
-                fill="none"
-                stroke-width="@StrokeWidth" />
+            fill="none" />
 
         @* Progress arc (gradient stroke, animated) *@
         <circle class="ring-progress"
                 cx="100" cy="100" r="@Radius"
                 fill="none"
                 stroke="url(#ringGrad)"
-                stroke-width="@StrokeWidth"
                 stroke-linecap="round"
                 stroke-dasharray="@Circumference"
                 style="stroke-dashoffset: @DashOffset"
@@ -49,7 +47,6 @@
 
     // SVG geometry constants
     private const int Radius = 78;
-    private const int StrokeWidth = 14;
     private const double TwoPI = 2 * Math.PI;
 
     // Calculated values for the SVG stroke-dasharray trick

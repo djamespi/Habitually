@@ -14,7 +14,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--stat-color);
+    background: linear-gradient(90deg, var(--stat-color), transparent);
 }
 
 /* Top row: label left, emoji right */

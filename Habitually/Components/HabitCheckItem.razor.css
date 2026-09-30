@@ -56,6 +56,8 @@
 
 /* ---- Emoji ---- */
 .habit-emoji {
+    width: 24px;
+    text-align: center;
     font-size: var(--text-lg);
     line-height: 1;
     flex-shrink: 0;
@@ -86,7 +88,7 @@
 .streak-count {
     font-family: var(--font-numeric);
     font-size: var(--text-sm);
-    color: var(--color-streak-longest);   /* amber, like the fire */
+    color: var(--color-muted-foreground);
     font-weight: var(--weight-medium);
     min-width: 1.5em;
     text-align: right;

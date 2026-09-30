@@ -33,6 +33,10 @@
   --color-streak-longest:       #f5a524;
   --color-gradient-partner:     #db2777;
 
+  /* Progress ring */
+  --progress-ring-size:         200px;
+  --progress-ring-stroke:       14px;
+
   /* Habit color picker */
   --color-habit-amber:          #f5a524;
   --color-habit-green:          #16a34a;
