@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# Tailwind dependencies (keep the generated wwwroot/css/tailwind.css)
+node_modules/
+
 # User-specific files
 *.rsuser
 *.suo
