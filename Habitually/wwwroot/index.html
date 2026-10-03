@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-background font-body text-base leading-normal text-foreground antialiased">
 
 <head>
     <meta charset="utf-8" />
@@ -13,27 +13,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <!-- App stylesheets (tokens first, then app reset) -->
-    <link rel="stylesheet" href="css/tokens.css" />
-    <link rel="stylesheet" href="css/app.css" />
+    <!-- Generated Tailwind CSS is included, so dotnet run needs no Node.js. -->
+    <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="Habitually.styles.css" rel="stylesheet" />
     <script type="importmap"></script>
 </head>
 
-<body>
+<body class="h-full bg-background font-body text-base leading-normal text-foreground antialiased">
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
+        <svg class="absolute inset-x-0 top-[20vh] mx-auto block size-loading">
+            <circle class="origin-center fill-none stroke-muted [stroke-width:0.6rem] [transform:rotate(-90deg)]" r="40%" cx="50%" cy="50%" />
+            <circle class="origin-center fill-none stroke-primary transition-[stroke-dasharray] duration-[0.05s] ease-[ease-in-out] [stroke-width:0.6rem] [transform:rotate(-90deg)] [stroke-dasharray:calc(3.141*var(--blazor-load-percentage,0%)*0.8),500%]" r="40%" cx="50%" cy="50%" />
         </svg>
-        <div class="loading-progress-text"></div>
+        <div class="absolute top-[calc(20vh+3.25rem)] right-0 left-[0.2rem] text-center font-bold after:content-[var(--blazor-load-percentage-text,'Loading')]"></div>
     </div>
 
-    <div id="blazor-error-ui">
+    <div id="blazor-error-ui" class="fixed bottom-0 left-0 z-[1000] hidden w-full bg-error-background px-error-x pt-error-top pb-error-bottom shadow-error [color-scheme:only_light]">
         An unhandled error has occurred.
         <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
+        <span class="dismiss absolute top-error-dismiss-top right-error-dismiss-right cursor-pointer">🗙</span>
     </div>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 </body>

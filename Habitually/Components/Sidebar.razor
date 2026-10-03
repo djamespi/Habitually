@@ -1,19 +1,19 @@
 @* Sidebar.razor — Fixed left sidebar with logo, nav links, and footer tip card *@
 
-<aside class="sidebar">
+<aside class="glass flex h-screen w-sidebar min-w-sidebar flex-col border-r border-border px-sidebar-px py-sidebar-py">
     @* ---- Logo area ---- *@
-    <div class="sidebar-header">
-        <div class="logo-mark">H</div>
-        <span class="logo-text">Habitually</span>
+    <div class="flex items-center gap-gap-sm pb-sidebar-py">
+        <div class="flex size-logo shrink-0 items-center justify-center rounded-logo bg-[linear-gradient(135deg,var(--color-primary),var(--color-gradient-partner))] font-display text-lg font-bold text-primary-foreground">H</div>
+        <span class="font-display text-xl font-semibold tracking-tight text-foreground">Habitually</span>
     </div>
 
     @* ---- Navigation links ---- *@
-    @* Each NavLink is wrapped in a div so scoped CSS can reach the
-       rendered <a> via ::deep. NavLink adds the "active" class automatically. *@
-    <nav class="sidebar-nav">
-        <div class="nav-item-wrapper">
-            <NavLink class="nav-item" href="" Match="NavLinkMatch.All">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    @* NavLink adds "active" automatically. The [&.active] utilities style it;
+       group-[.active] applies the matching accent color to its icon. *@
+    <nav class="flex flex-1 flex-col gap-gap-2xs">
+        <div>
+            <NavLink class="group relative flex h-sidebar-h cursor-pointer items-center gap-gap-xs rounded-button px-sidebar-item-px font-body text-sm font-medium text-muted-foreground no-underline [transition:var(--transition-nav)] [&:not(.active):hover]:bg-muted [&:not(.active):hover]:text-foreground [&:not(.active):hover]:[transform:translateX(2px)] [&.active]:border [&.active]:border-border [&.active]:bg-card [&.active]:text-foreground [&.active]:shadow-nav-active [&.active]:after:absolute [&.active]:after:left-0 [&.active]:after:top-[20%] [&.active]:after:h-[60%] [&.active]:after:w-heatmap-gap [&.active]:after:rounded-r-full [&.active]:after:bg-[linear-gradient(180deg,var(--color-primary),var(--color-gradient-partner))] [&.active]:after:content-['']" href="" Match="NavLinkMatch.All">
+                <svg class="size-nav-icon shrink-0 group-[.active]:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
@@ -22,9 +22,9 @@
             </NavLink>
         </div>
 
-        <div class="nav-item-wrapper">
-            <NavLink class="nav-item" href="habits" Match="NavLinkMatch.Prefix">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div>
+            <NavLink class="group relative flex h-sidebar-h cursor-pointer items-center gap-gap-xs rounded-button px-sidebar-item-px font-body text-sm font-medium text-muted-foreground no-underline [transition:var(--transition-nav)] [&:not(.active):hover]:bg-muted [&:not(.active):hover]:text-foreground [&:not(.active):hover]:[transform:translateX(2px)] [&.active]:border [&.active]:border-border [&.active]:bg-card [&.active]:text-foreground [&.active]:shadow-nav-active [&.active]:after:absolute [&.active]:after:left-0 [&.active]:after:top-[20%] [&.active]:after:h-[60%] [&.active]:after:w-heatmap-gap [&.active]:after:rounded-r-full [&.active]:after:bg-[linear-gradient(180deg,var(--color-primary),var(--color-gradient-partner))] [&.active]:after:content-['']" href="habits" Match="NavLinkMatch.Prefix">
+                <svg class="size-nav-icon shrink-0 group-[.active]:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"/>
                     <line x1="8" y1="12" x2="21" y2="12"/>
@@ -37,9 +37,9 @@
             </NavLink>
         </div>
 
-        <div class="nav-item-wrapper">
-            <NavLink class="nav-item" href="insights" Match="NavLinkMatch.Prefix">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div>
+            <NavLink class="group relative flex h-sidebar-h cursor-pointer items-center gap-gap-xs rounded-button px-sidebar-item-px font-body text-sm font-medium text-muted-foreground no-underline [transition:var(--transition-nav)] [&:not(.active):hover]:bg-muted [&:not(.active):hover]:text-foreground [&:not(.active):hover]:[transform:translateX(2px)] [&.active]:border [&.active]:border-border [&.active]:bg-card [&.active]:text-foreground [&.active]:shadow-nav-active [&.active]:after:absolute [&.active]:after:left-0 [&.active]:after:top-[20%] [&.active]:after:h-[60%] [&.active]:after:w-heatmap-gap [&.active]:after:rounded-r-full [&.active]:after:bg-[linear-gradient(180deg,var(--color-primary),var(--color-gradient-partner))] [&.active]:after:content-['']" href="insights" Match="NavLinkMatch.Prefix">
+                <svg class="size-nav-icon shrink-0 group-[.active]:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="20" x2="18" y2="10"/>
                     <line x1="12" y1="20" x2="12" y2="4"/>
@@ -49,9 +49,9 @@
             </NavLink>
         </div>
 
-        <div class="nav-item-wrapper">
-            <NavLink class="nav-item" href="settings" Match="NavLinkMatch.Prefix">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <div>
+            <NavLink class="group relative flex h-sidebar-h cursor-pointer items-center gap-gap-xs rounded-button px-sidebar-item-px font-body text-sm font-medium text-muted-foreground no-underline [transition:var(--transition-nav)] [&:not(.active):hover]:bg-muted [&:not(.active):hover]:text-foreground [&:not(.active):hover]:[transform:translateX(2px)] [&.active]:border [&.active]:border-border [&.active]:bg-card [&.active]:text-foreground [&.active]:shadow-nav-active [&.active]:after:absolute [&.active]:after:left-0 [&.active]:after:top-[20%] [&.active]:after:h-[60%] [&.active]:after:w-heatmap-gap [&.active]:after:rounded-r-full [&.active]:after:bg-[linear-gradient(180deg,var(--color-primary),var(--color-gradient-partner))] [&.active]:after:content-['']" href="settings" Match="NavLinkMatch.Prefix">
+                <svg class="size-nav-icon shrink-0 group-[.active]:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"/>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -62,9 +62,9 @@
     </nav>
 
     @* ---- Footer tip card, pinned to the bottom ---- *@
-    <div class="sidebar-footer">
-        <div class="tip-card">
-            <span class="tip-label">Tip.</span> Consistency over
+    <div class="pt-gap-md">
+        <div class="mx-auto w-sidebar-footer rounded-logo border border-border bg-[color-mix(in_srgb,var(--color-card)_50%,transparent)] p-card-sidebar font-numeric text-xs leading-[1.6] text-muted-foreground">
+            <span class="font-semibold text-foreground">Tip.</span> Consistency over
             intensity — show up small, every day.
         </div>
     </div>

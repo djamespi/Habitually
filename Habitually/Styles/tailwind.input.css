@@ -1,0 +1,257 @@
+@import "tailwindcss" source(none);
+
+/* Scan only source markup, never Blazor's generated bin/obj files. */
+@source "../Components/**/*.razor";
+@source "../Layout/**/*.razor";
+@source "../Pages/**/*.razor";
+@source "../App.razor";
+@source "../wwwroot/index.html";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* static keeps every design token in the output, including future heatmap tokens. */
+@theme static {
+  /* Core palette: light is the default. */
+  --color-background: #f4f2ee;
+  --color-surface: #faf9f6;
+  --color-foreground: #1a1917;
+  --color-card-foreground: #1a1917;
+  --color-card: #ffffff;
+  --color-muted: #edeae4;
+  --color-muted-foreground: #75716a;
+  --color-border: #e2ded6;
+  --color-primary: #5b4be1;
+  --color-accent: #5b4be1;
+  --color-ring: #5b4be1;
+  --color-primary-foreground: #ffffff;
+
+  /* Heatmap (0 = none, 4 = most). */
+  --color-heat-0: #e7e3db;
+  --color-heat-1: #d7d1f5;
+  --color-heat-2: #b3a7ee;
+  --color-heat-3: #8171e6;
+  --color-heat-4: #5b4be1;
+
+  /* Semantic accents and habit picker. */
+  --color-danger: #e0483d;
+  --color-streak-current: #e0483d;
+  --color-streak-longest: #f5a524;
+  --color-gradient-partner: #db2777;
+  --color-habit-amber: #f5a524;
+  --color-habit-green: #16a34a;
+  --color-habit-sky: #0ea5e9;
+  --color-habit-pink: #db2777;
+  --color-habit-purple: #7c3aed;
+  --color-habit-teal: #0d9488;
+
+  --progress-ring-size: 200px;
+  --progress-ring-stroke: 14px;
+
+  /* Aurora washes are retained for future features. */
+  --aurora-primary-opacity: 0.32;
+  --aurora-sky-opacity: 0.26;
+  --aurora-pink-opacity: 0.26;
+  --aurora-green-opacity: 0.22;
+  --aurora-amber-opacity: 0.14;
+  --aurora-blur: 8px;
+  --aurora-saturate: 1.2;
+  --aurora-overlay-opacity: 1;
+
+  /* Effects. */
+  --gradient-text: linear-gradient(120deg, var(--color-foreground) 30%, var(--color-primary) 130%);
+  --glass-opacity: 0.78;
+  --glass-blur: 14px;
+  --glass-saturate: 1.3;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 12px 32px -12px rgba(0,0,0,0.12);
+  --shadow-card-hover: 0 24px 48px -16px rgba(91,75,225,0.28);
+  --shadow-nav-active: 0 1px 2px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.12);
+  --shadow-error: 0 -1px 2px rgba(0,0,0,0.2);
+  --card-hover-lift: -4px;
+
+  /* Typography. Explicit line heights preserve the old inherited 1.5. */
+  --font-display: 'Instrument Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-numeric: 'JetBrains Mono', monospace;
+  --default-font-family: var(--font-body);
+  --text-2xs: 10px;
+  --text-2xs--line-height: 1.5;
+  --text-xs: 12px;
+  --text-xs--line-height: 1.5;
+  --text-sm: 14px;
+  --text-sm--line-height: 1.5;
+  --text-base: 16px;
+  --text-base--line-height: 1.5;
+  --text-lg: 18px;
+  --text-lg--line-height: 1.5;
+  --text-xl: 20px;
+  --text-xl--line-height: 1.5;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 1.5;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 1.5;
+  --text-5xl: 48px;
+  --text-5xl--line-height: 1.5;
+  --tracking-tight: -0.02em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --font-weight-medium: var(--weight-medium);
+  --font-weight-semibold: var(--weight-semibold);
+  --font-weight-bold: var(--weight-bold);
+
+  /* Original spacing tokens, with utility aliases below. */
+  --spacing: 4px;
+  --space-page-x: 48px;
+  --space-page-y: 40px;
+  --space-section-lg: 36px;
+  --space-section-sm: 24px;
+  --space-card: 24px;
+  --space-card-featured: 28px;
+  --space-card-largest: 32px;
+  --space-card-sidebar: 16px;
+  --gap-xl: 24px;
+  --gap-lg: 20px;
+  --gap-md: 16px;
+  --gap-sm: 12px;
+  --gap-xs: 8px;
+  --gap-2xs: 6px;
+  --control-button-h: 40px;
+  --control-button-px: 16px;
+  --control-button-icon-gap: 8px;
+  --control-sidebar-h: 44px;
+  --control-sidebar-px: 12px;
+  --control-modal-close: 32px;
+  --control-logo: 36px;
+  --heatmap-cell: 13px;
+  --heatmap-gap: 3px;
+  --space-empty-y: 96px;
+  --sidebar-width: 256px;
+  --sidebar-px: 16px;
+  --sidebar-py: 24px;
+  --sidebar-footer-width: 216px;
+  --sidebar-footer-inset: 4px;
+
+  /* --spacing-* makes utilities such as px-page-x and size-progress-ring. */
+  --spacing-page-x: var(--space-page-x);
+  --spacing-page-y: var(--space-page-y);
+  --spacing-section-lg: var(--space-section-lg);
+  --spacing-section-sm: var(--space-section-sm);
+  --spacing-card: var(--space-card);
+  --spacing-card-featured: var(--space-card-featured);
+  --spacing-card-largest: var(--space-card-largest);
+  --spacing-card-sidebar: var(--space-card-sidebar);
+  --spacing-gap-xl: var(--gap-xl);
+  --spacing-gap-lg: var(--gap-lg);
+  --spacing-gap-md: var(--gap-md);
+  --spacing-gap-sm: var(--gap-sm);
+  --spacing-gap-xs: var(--gap-xs);
+  --spacing-gap-2xs: var(--gap-2xs);
+  --spacing-button-h: var(--control-button-h);
+  --spacing-button-px: var(--control-button-px);
+  --spacing-button-icon-gap: var(--control-button-icon-gap);
+  --spacing-sidebar-h: var(--control-sidebar-h);
+  --spacing-sidebar-item-px: var(--control-sidebar-px);
+  --spacing-modal-close: var(--control-modal-close);
+  --spacing-logo: var(--control-logo);
+  --spacing-heatmap-cell: var(--heatmap-cell);
+  --spacing-heatmap-gap: var(--heatmap-gap);
+  --spacing-empty-y: var(--space-empty-y);
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-sidebar-px: var(--sidebar-px);
+  --spacing-sidebar-py: var(--sidebar-py);
+  --spacing-sidebar-footer: var(--sidebar-footer-width);
+  --spacing-sidebar-footer-inset: var(--sidebar-footer-inset);
+  --spacing-progress-ring: var(--progress-ring-size);
+  --spacing-checkbox: 26px;
+  --spacing-nav-icon: 18px;
+  --spacing-streak-count: 1.5em;
+
+  /* Radius. */
+  --radius-card: 14px;
+  --radius-lg: 16px;
+  --radius-logo: 12px;
+  --radius-button: 10px;
+  --radius-icon: 8px;
+  --radius-bar: 6px;
+  --radius-heatmap: 3px;
+  --radius-full: 9999px;
+
+  /* Motion. */
+  --ease-rise: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-rise: 0.55s;
+  --rise-distance: 14px;
+  --ease-modal: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-modal: 0.26s;
+  --modal-distance: 10px;
+  --modal-scale: 0.98;
+  --duration-checkbox: 0.32s;
+  --checkbox-scale: 1.28;
+  --duration-float: 4s;
+  --float-distance: 6px;
+  --duration-aurora: 26s;
+  --duration-fast: 0.15s;
+  --duration-hover: 0.2s;
+  --duration-progress: 0.6s;
+  --transition-nav: background-color var(--duration-fast) ease, color var(--duration-fast) ease, transform var(--duration-hover) ease;
+  --animate-checkbox-pop: checkbox-pop var(--duration-checkbox) cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-rise-in: rise-in var(--duration-rise) var(--ease-rise) both;
+
+  /* Existing framework loading/error UI. */
+  --color-error-background: lightyellow;
+  --spacing-loading: 8rem;
+  --spacing-error-x: 1.25rem;
+  --spacing-error-top: 0.6rem;
+  --spacing-error-bottom: 0.7rem;
+  --spacing-error-dismiss-right: 0.75rem;
+  --spacing-error-dismiss-top: 0.5rem;
+}
+
+/* The same utility classes automatically use the dark palette. */
+[data-theme="dark"] {
+  --color-background: #131217;
+  --color-surface: #191820;
+  --color-foreground: #edecf0;
+  --color-card-foreground: #edecf0;
+  --color-card: #1e1d26;
+  --color-muted: #26252f;
+  --color-muted-foreground: #9b98a6;
+  --color-border: #2c2b36;
+  --color-primary: #8271f0;
+  --color-accent: #8271f0;
+  --color-ring: #8271f0;
+  --color-primary-foreground: #ffffff;
+  --color-heat-0: #24232c;
+  --color-heat-1: #362f5c;
+  --color-heat-2: #4a3f96;
+  --color-heat-3: #6957cf;
+  --color-heat-4: #8271f0;
+  --aurora-overlay-opacity: 0.7;
+  /* Re-evaluate the gradient when a theme is set on a nested element. */
+  --gradient-text: linear-gradient(120deg, var(--color-foreground) 30%, var(--color-primary) 130%);
+}
+
+/* Only the shared text/glass effects and animation keyframes need custom CSS. */
+@utility gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility glass {
+  background-color: color-mix(in srgb, var(--color-card) calc(var(--glass-opacity) * 100%), transparent);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+@keyframes checkbox-pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(var(--checkbox-scale)); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(var(--rise-distance)); }
+  to { opacity: 1; transform: translateY(0); }
+}

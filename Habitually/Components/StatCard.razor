@@ -1,17 +1,17 @@
 @* StatCard.razor — Displays a single stat (e.g. streak) with a colored accent line and emoji.
    Used on the Dashboard for "Current Streak" and "Longest Streak". *@
 
-<div class="stat-card card" style="--stat-color: @AccentColor">
+<div class="relative overflow-hidden rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))] before:absolute before:inset-x-0 before:top-0 before:h-heatmap-gap before:bg-[linear-gradient(90deg,var(--stat-color),transparent)] before:content-['']" style="--stat-color: @AccentColor">
     @* Top row: uppercase label on the left, emoji on the right *@
-    <div class="stat-top">
-        <span class="stat-label">@Label</span>
-        <span class="stat-emoji">@Emoji</span>
+    <div class="flex items-start justify-between">
+        <span class="font-body text-xs font-semibold tracking-widest text-muted-foreground uppercase">@Label</span>
+        <span class="text-2xl leading-none">@Emoji</span>
     </div>
 
     @* Bottom row: big colored number + "days" unit *@
-    <div class="stat-value-row">
-        <span class="stat-number">@Value</span>
-        <span class="stat-unit">days</span>
+    <div class="mt-gap-sm flex items-baseline gap-gap-xs">
+        <span class="font-display text-5xl leading-none font-bold tracking-tight text-(--stat-color)">@Value</span>
+        <span class="font-body text-base text-muted-foreground">days</span>
     </div>
 </div>
 

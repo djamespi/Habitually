@@ -1,12 +1,12 @@
 @* MainLayout.razor — App shell with sidebar + scrollable content area *@
 @inherits LayoutComponentBase
 
-<div class="app-shell">
+<div class="flex h-screen overflow-hidden">
     @* Fixed sidebar on the left *@
     <Sidebar />
 
     @* Scrollable main content area with page shell padding *@
-    <main class="main-content">
+    <main class="min-w-0 flex-1 overflow-y-auto bg-background px-page-x py-page-y">
         @Body
     </main>
 </div>

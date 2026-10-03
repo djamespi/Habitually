@@ -11,16 +11,16 @@
 <PageTitle>Dashboard</PageTitle>
 
 @* ── Date line with small primary dot ── *@
-<div class="date-line">
-    <span class="date-dot"></span>
-    <span class="date-text">@DateTime.Now.ToString("ddd, MMM d, yyyy")</span>
+<div class="mb-gap-sm flex items-center gap-gap-xs">
+    <span class="size-gap-2xs shrink-0 rounded-full bg-primary"></span>
+    <span class="font-numeric text-sm text-muted-foreground">@DateTime.Now.ToString("ddd, MMM d, yyyy")</span>
 </div>
 
 @* ── Time-based greeting with gradient text ── *@
-<h1 class="greeting">@GetGreeting()<span class="greeting-dot">.</span></h1>
+<h1 class="gradient-text mb-section-lg inline-block font-display text-5xl leading-[1.1] font-bold tracking-tight text-transparent">@GetGreeting()<span class="bg-none text-primary [-webkit-text-fill-color:var(--color-primary)]">.</span></h1>
 
 @* ── Dashboard grid ── *@
-<div class="dashboard-grid">
+<div class="grid grid-cols-[1fr_1fr_1fr] grid-rows-[auto_1fr] gap-gap-xl">
 
     @* Current streak stat card (red / danger accent) *@
     <StatCard Label="CURRENT STREAK"
@@ -35,22 +35,22 @@
               AccentColor="var(--color-streak-longest)" />
 
     @* Today progress card (right column, spans both rows) *@
-    <div class="card today-card">
-        <h2 class="today-title">Today</h2>
+    <div class="col-start-3 row-start-1 row-end-3 flex flex-col items-center justify-start self-start rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))]">
+        <h2 class="mb-gap-xl self-start font-display text-xl font-bold text-foreground">Today</h2>
         <ProgressRing Completed="@HabitService.GetTodayCompletedCount()"
                       Total="@HabitService.GetHabitCount()" />
     </div>
 
     @* Today's habits checklist card *@
-    <div class="card habits-card">
-        <div class="habits-header">
-            <h2 class="habits-title">Today's habits</h2>
-            <span class="habits-count">
+    <div class="col-start-1 col-end-3 rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))]">
+        <div class="mb-gap-lg flex items-center justify-between">
+            <h2 class="font-display text-xl font-bold text-foreground">Today's habits</h2>
+            <span class="font-numeric text-sm text-muted-foreground">
                 @HabitService.GetTodayCompletedCount()/@HabitService.GetHabitCount() done
             </span>
         </div>
 
-        <div class="habits-list">
+        <div class="flex flex-col gap-gap-xs">
             @foreach (var habit in _habits)
             {
                 <HabitCheckItem Habit="@habit"

@@ -1,24 +1,24 @@
 @* ProgressRing.razor — SVG circular progress ring with gradient stroke.
    Shows completion percentage, count, and an encouraging message. *@
 
-<div class="ring-wrapper">
+<div class="relative mx-auto size-progress-ring">
     @* SVG ring *@
-    <svg class="ring-svg" viewBox="0 0 200 200">
+    <svg class="block size-full" viewBox="0 0 200 200">
         <defs>
             @* Gradient for the progress stroke: primary → pink *@
             <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" style="stop-color: var(--color-primary)" />
-                <stop offset="100%" style="stop-color: var(--color-gradient-partner)" />
+                <stop offset="0%" class="[stop-color:var(--color-primary)]" />
+                <stop offset="100%" class="[stop-color:var(--color-gradient-partner)]" />
             </linearGradient>
         </defs>
 
         @* Background track (full circle, muted color) *@
-        <circle class="ring-track"
+        <circle class="stroke-muted [stroke-width:var(--progress-ring-stroke)]"
                 cx="100" cy="100" r="@Radius"
             fill="none" />
 
         @* Progress arc (gradient stroke, animated) *@
-        <circle class="ring-progress"
+        <circle class="transition-[stroke-dashoffset] duration-(--duration-progress) ease-[ease] [stroke-width:var(--progress-ring-stroke)]"
                 cx="100" cy="100" r="@Radius"
                 fill="none"
                 stroke="url(#ringGrad)"
@@ -29,14 +29,14 @@
     </svg>
 
     @* Centered text overlay *@
-    <div class="ring-text">
-        <span class="ring-percent">@Percentage%</span>
-        <span class="ring-count">@Completed of @Total</span>
+    <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+        <span class="font-display text-5xl leading-none font-bold tracking-tight text-foreground">@Percentage%</span>
+        <span class="mt-gap-2xs font-numeric text-xs text-muted-foreground">@Completed of @Total</span>
     </div>
 </div>
 
 @* Encouraging message below the ring *@
-<p class="ring-message">@GetMessage()</p>
+<p class="mt-gap-md text-center font-body text-sm text-muted-foreground">@GetMessage()</p>
 
 @code {
     /// <summary>Number of habits completed today.</summary>
