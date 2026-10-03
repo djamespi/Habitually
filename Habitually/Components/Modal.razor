@@ -1,0 +1,14 @@
+@* Native dialog makes the background inert and keeps keyboard focus inside. *@
+<dialog @ref="_dialog" aria-labelledby="@_titleId"
+        class="fixed inset-0 m-auto max-h-[calc(100dvh-var(--gap-xl)*2)] w-[calc(100%-var(--gap-xl)*2)] overflow-y-auto rounded-card border border-border bg-card p-0 text-card-foreground shadow-modal motion-safe:animate-modal-in backdrop:bg-modal-backdrop/40 backdrop:backdrop-blur-modal-backdrop @(Compact ? "max-w-modal-confirm" : "max-w-modal")">
+    <header class="flex items-center justify-between gap-gap-md border-b border-border p-card">
+        <h2 id="@_titleId" class="font-display text-lg font-semibold">@Title</h2>
+        <button type="button" aria-label="Close dialog" @onclick="RequestClose"
+                class="flex size-modal-close shrink-0 cursor-pointer items-center justify-center rounded-icon text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="m6 6 12 12M18 6 6 18" />
+            </svg>
+        </button>
+    </header>
+    <div class="p-card">@ChildContent</div>
+</dialog>

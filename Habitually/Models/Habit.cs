@@ -14,8 +14,8 @@ public class Habit
     /// <summary>Single emoji shown beside the habit name.</summary>
     public string Emoji { get; set; } = "✅";
 
-    /// <summary>Hex color string from the habit picker, e.g. "#f5a524".</summary>
-    public string Color { get; set; } = "#5b4be1";
+    /// <summary>Theme color from the habit picker, e.g. "var(--color-habit-amber)".</summary>
+    public string Color { get; set; } = "var(--color-primary)";
 
     /// <summary>
     /// How many days per week the user aims to complete this habit (1–7).

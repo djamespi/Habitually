@@ -1,0 +1,64 @@
+@using Habitually.Services
+
+<Modal Title="@(Habit is null ? "New habit" : "Edit habit")" OnClose="OnClose">
+    <form @onsubmit="SaveAsync" @onsubmit:preventDefault>
+        <div class="flex flex-col gap-gap-lg">
+            <div>
+                <label for="@_nameId" class="mb-gap-xs block font-numeric text-2xs tracking-widest text-muted-foreground uppercase">NAME</label>
+                <input id="@_nameId" type="text" placeholder="e.g. Morning run" required maxlength="@HabitEditor.MaxNameLength" autofocus
+                       @bind="_editor.Name" @bind:event="oninput"
+                       class="h-button-h w-full rounded-button border border-border bg-background px-button-px font-body text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-2 focus:outline-ring/30" />
+            </div>
+
+            <fieldset>
+                <legend class="mb-gap-xs font-numeric text-2xs tracking-widest text-muted-foreground uppercase">ICON</legend>
+                <div class="grid grid-cols-8 gap-gap-xs">
+                    @foreach (var option in HabitEditor.Icons)
+                    {
+                        <button type="button" aria-label="@option.Label" title="@option.Label" aria-pressed="@(_editor.Emoji == option.Emoji ? "true" : "false")"
+                                @onclick="() => _editor.Emoji = option.Emoji"
+                                class="flex h-button-h cursor-pointer items-center justify-center rounded-icon border text-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @(_editor.Emoji == option.Emoji ? "border-primary bg-primary/10" : "border-transparent hover:bg-muted")">
+                            @option.Emoji
+                        </button>
+                    }
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend class="mb-gap-xs font-numeric text-2xs tracking-widest text-muted-foreground uppercase">COLOR</legend>
+                <div class="flex gap-gap-xs">
+                    @foreach (var option in HabitEditor.Colors)
+                    {
+                        <button type="button" aria-label="@option.Label" title="@option.Label" aria-pressed="@(_editor.Color == option.Value ? "true" : "false")"
+                                style="--picker-color: @option.Value" @onclick="() => _editor.Color = option.Value"
+                                class="size-8 shrink-0 cursor-pointer rounded-full bg-(--picker-color) ring-offset-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring @(_editor.Color == option.Value ? "ring-2 ring-(--picker-color) ring-offset-2" : "")">
+                        </button>
+                    }
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend class="mb-gap-xs font-numeric text-2xs tracking-widest text-muted-foreground uppercase">
+                    WEEKLY TARGET — @_editor.WeeklyTargetDays @(_editor.WeeklyTargetDays == 1 ? "DAY" : "DAYS")
+                </legend>
+                <div class="grid grid-cols-7 gap-gap-xs">
+                    @foreach (var day in Enumerable.Range(1, 7))
+                    {
+                        <button type="button" aria-label="@($"{day} {(day == 1 ? "day" : "days")} per week")" aria-pressed="@(_editor.WeeklyTargetDays == day ? "true" : "false")"
+                                @onclick="() => _editor.WeeklyTargetDays = day"
+                                class="h-button-h cursor-pointer rounded-icon border font-numeric text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @(_editor.WeeklyTargetDays == day ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:bg-muted")">
+                            @day
+                        </button>
+                    }
+                </div>
+            </fieldset>
+        </div>
+
+        <footer class="mt-gap-xl flex justify-end gap-gap-sm">
+            <button type="button" @onclick="OnClose" class="h-button-h cursor-pointer rounded-button px-button-px font-body text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Cancel</button>
+            <button type="submit" disabled="@(!_editor.CanSave)" class="h-button-h cursor-pointer rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground disabled:cursor-default disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                @(Habit is null ? "Create habit" : "Save changes")
+            </button>
+        </footer>
+    </form>
+</Modal>

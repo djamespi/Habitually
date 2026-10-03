@@ -73,7 +73,14 @@
         _habits = HabitService.GetHabits();
 
         // Subscribe so the page re-renders when data changes (checkbox toggle)
-        HabitService.OnChange += StateHasChanged;
+        HabitService.OnChange += RefreshHabits;
+    }
+
+    // Add, edit, and delete replace the service's list or models, so refresh our copy.
+    private void RefreshHabits()
+    {
+        _habits = HabitService.GetHabits();
+        StateHasChanged();
     }
 
     /// <summary>Toggle a habit's completion for today.</summary>
@@ -94,6 +101,6 @@
     /// <summary>Unsubscribe to avoid memory leaks.</summary>
     public void Dispose()
     {
-        HabitService.OnChange -= StateHasChanged;
+        HabitService.OnChange -= RefreshHabits;
     }
 }

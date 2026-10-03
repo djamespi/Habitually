@@ -1,13 +1,13 @@
 @* A reusable habit summary. The page supplies the service-calculated stats. *@
 @using Habitually.Models
 
-<article class="flex items-start gap-gap-xl rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))]"
+<article class="group relative flex items-start gap-gap-xl rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))]"
          style="--habit-color: @Habit.Color">
     @* Fixed-width emoji box keeps each card's text and stats aligned. *@
     <span class="flex size-12 shrink-0 items-center justify-center text-2xl" aria-hidden="true">@Habit.Emoji</span>
 
     <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-gap-xs">
+        <div class="flex items-center gap-gap-xs pr-16">
             <h2 class="font-display text-lg font-medium text-card-foreground">@Habit.Name</h2>
             @* Use the habit's stored color, just like the Dashboard checklist. *@
             <span class="size-gap-xs shrink-0 rounded-full bg-(--habit-color)" aria-hidden="true"></span>
@@ -32,6 +32,22 @@
             </div>
         </dl>
     </div>
+
+    @* Hover reveals the actions; keyboard focus reveals them too. *@
+    <div class="pointer-events-none absolute top-gap-sm right-gap-sm flex gap-gap-2xs opacity-0 transition-opacity duration-(--duration-fast) group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+        <button type="button" aria-label="@($"Edit {Habit.Name}")" title="Edit habit" @onclick="() => OnEdit.InvokeAsync(Habit)"
+                class="flex size-modal-close cursor-pointer items-center justify-center rounded-icon border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m16 3 5 5M4 20l4-1L21 6a2 2 0 0 0-3-3L5 16l-1 4Z" />
+            </svg>
+        </button>
+        <button type="button" aria-label="@($"Delete {Habit.Name}")" title="Delete habit" @onclick="() => OnDelete.InvokeAsync(Habit)"
+                class="flex size-modal-close cursor-pointer items-center justify-center rounded-icon border border-danger/30 bg-danger/10 text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+            </svg>
+        </button>
+    </div>
 </article>
 
 @code {
@@ -39,4 +55,6 @@
     [Parameter] public bool IsCompletedToday { get; set; }
     [Parameter] public int Streak { get; set; }
     [Parameter] public int TotalCompletions { get; set; }
+    [Parameter] public EventCallback<Habit> OnEdit { get; set; }
+    [Parameter] public EventCallback<Habit> OnDelete { get; set; }
 }

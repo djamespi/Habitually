@@ -15,8 +15,7 @@
         </p>
     </div>
 
-    @* The Add buttons are placeholders until habit creation is implemented. *@
-    <button type="button" class="inline-flex h-button-h shrink-0 items-center justify-center gap-button-icon-gap rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+    <button type="button" @onclick="OpenAdd" class="inline-flex h-button-h shrink-0 cursor-pointer items-center justify-center gap-button-icon-gap rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
         <span aria-hidden="true">+</span> Add habit
     </button>
 </header>
@@ -31,7 +30,7 @@
             <path class="stroke-current" d="m27 49 9 9 18-18" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <p class="text-base text-muted-foreground">No habits yet. Add your first one.</p>
-        <button type="button" class="inline-flex h-button-h items-center justify-center rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+        <button type="button" @onclick="OpenAdd" class="inline-flex h-button-h cursor-pointer items-center justify-center rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
             Add habit
         </button>
     </div>
@@ -44,14 +43,69 @@ else
             <HabitCard @key="habit.Id" Habit="@habit"
                        IsCompletedToday="@HabitService.IsCompleted(habit.Id, _today)"
                        Streak="@HabitService.GetCurrentStreak(habit.Id)"
-                       TotalCompletions="@HabitService.GetTotalCompletions(habit.Id)" />
+                       TotalCompletions="@HabitService.GetTotalCompletions(habit.Id)"
+                       OnEdit="OpenEdit" OnDelete="OpenDelete" />
         }
     </div>
+}
+
+@if (_showEditor)
+{
+    <AddEditHabitModal Habit="_editingHabit" OnSave="SaveHabit" OnClose="CloseEditor" />
+}
+
+@if (_habitToDelete is not null)
+{
+    <Modal Title="Delete habit" Compact="true" OnClose="CloseDelete">
+        <p class="text-sm text-muted-foreground">Delete this habit? Its history will be removed.</p>
+        <footer class="mt-gap-xl flex justify-end gap-gap-sm">
+            <button type="button" @onclick="CloseDelete" class="h-button-h cursor-pointer rounded-button px-button-px text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Cancel</button>
+            <button type="button" @onclick="ConfirmDelete" class="h-button-h cursor-pointer rounded-button border border-danger/30 bg-danger/10 px-button-px text-sm font-medium text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger">Delete</button>
+        </footer>
+    </Modal>
 }
 
 @code {
     private List<Habit> _habits = new();
     private DateOnly _today;
+    private bool _showEditor;
+    private Habit? _editingHabit;
+    private Habit? _habitToDelete;
+
+    private void OpenAdd()
+    {
+        _editingHabit = null;
+        _showEditor = true;
+    }
+
+    private void OpenEdit(Habit habit)
+    {
+        _editingHabit = habit;
+        _showEditor = true;
+    }
+
+    private void CloseEditor()
+    {
+        _showEditor = false;
+        _editingHabit = null;
+    }
+
+    private void SaveHabit(Habit habit)
+    {
+        if (_editingHabit is null) HabitService.AddHabit(habit);
+        else HabitService.UpdateHabit(habit);
+        CloseEditor();
+    }
+
+    private void OpenDelete(Habit habit) => _habitToDelete = habit;
+    private void CloseDelete() => _habitToDelete = null;
+
+    private void ConfirmDelete()
+    {
+        if (_habitToDelete is null) return;
+        HabitService.DeleteHabit(_habitToDelete.Id);
+        CloseDelete();
+    }
 
     protected override void OnInitialized()
     {

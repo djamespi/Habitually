@@ -153,37 +153,37 @@ public class HabitService
             new Habit
             {
                 Id   = Guid.Parse("a1111111-1111-1111-1111-111111111111"),
-                Name = "Morning workout", Emoji = "🏃", Color = "#db2777",  // Pink
+                Name = "Morning workout", Emoji = "🏃", Color = "var(--color-habit-pink)",
                 WeeklyTargetDays = 5
             },
             new Habit
             {
                 Id   = Guid.Parse("b2222222-2222-2222-2222-222222222222"),
-                Name = "Read 20 pages", Emoji = "📚", Color = "#0ea5e9",    // Sky
+                Name = "Read 20 pages", Emoji = "📚", Color = "var(--color-habit-sky)",
                 WeeklyTargetDays = 7
             },
             new Habit
             {
                 Id   = Guid.Parse("c3333333-3333-3333-3333-333333333333"),
-                Name = "Drink 2L water", Emoji = "💧", Color = "#0ea5e9",   // Sky
+                Name = "Drink 2L water", Emoji = "💧", Color = "var(--color-habit-sky)",
                 WeeklyTargetDays = 7
             },
             new Habit
             {
                 Id   = Guid.Parse("d4444444-4444-4444-4444-444444444444"),
-                Name = "Meditate", Emoji = "🧘", Color = "#16a34a",         // Green
+                Name = "Meditate", Emoji = "🧘", Color = "var(--color-habit-green)",
                 WeeklyTargetDays = 6
             },
             new Habit
             {
                 Id   = Guid.Parse("e5555555-5555-5555-5555-555555555555"),
-                Name = "No late-night screens", Emoji = "🌙", Color = "#7c3aed", // Purple
+                Name = "No late-night screens", Emoji = "🌙", Color = "var(--color-habit-purple)",
                 WeeklyTargetDays = 5
             },
             new Habit
             {
                 Id   = Guid.Parse("f6666666-6666-6666-6666-666666666666"),
-                Name = "Study session", Emoji = "✏️", Color = "#f5a524",    // Amber
+                Name = "Study session", Emoji = "✏️", Color = "var(--color-habit-amber)",
                 WeeklyTargetDays = 5
             },
         });
