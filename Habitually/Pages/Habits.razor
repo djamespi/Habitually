@@ -1,6 +1,75 @@
-@* Habits.razor — Habits page (empty shell for now) *@
+@* Habits page — summaries use the shared in-memory service. *@
 @page "/habits"
+@using Habitually.Models
+@using Habitually.Services
+@inject HabitService HabitService
+@implements IDisposable
 
 <PageTitle>Habits</PageTitle>
 
-<h1 class="gradient-text font-display text-5xl leading-[1.1] font-bold tracking-tight">Habits</h1>
+<header class="mb-section-lg flex items-end justify-between gap-gap-xl">
+    <div>
+        <h1 class="gradient-text inline-block font-display text-5xl leading-[1.1] font-bold tracking-tight">Habits</h1>
+        <p class="text-base text-muted-foreground">
+            @_habits.Count active @(_habits.Count == 1 ? "habit" : "habits")
+        </p>
+    </div>
+
+    @* The Add buttons are placeholders until habit creation is implemented. *@
+    <button type="button" class="inline-flex h-button-h shrink-0 items-center justify-center gap-button-icon-gap rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+        <span aria-hidden="true">+</span> Add habit
+    </button>
+</header>
+
+@if (_habits.Count == 0)
+{
+    <div class="flex flex-col items-center gap-gap-xl py-empty-y text-center">
+        @* A small calendar illustration made entirely from theme-colored SVG. *@
+        <svg class="size-20 text-primary" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+            <rect class="fill-card stroke-border" x="10" y="16" width="60" height="54" rx="10" stroke-width="2" />
+            <path class="stroke-current" d="M10 32h60M26 10v14M54 10v14" stroke-width="3" stroke-linecap="round" />
+            <path class="stroke-current" d="m27 49 9 9 18-18" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="text-base text-muted-foreground">No habits yet. Add your first one.</p>
+        <button type="button" class="inline-flex h-button-h items-center justify-center rounded-button bg-primary px-button-px font-body text-sm font-medium text-primary-foreground shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            Add habit
+        </button>
+    </div>
+}
+else
+{
+    <div class="grid grid-cols-2 gap-gap-xl">
+        @foreach (var habit in _habits)
+        {
+            <HabitCard @key="habit.Id" Habit="@habit"
+                       IsCompletedToday="@HabitService.IsCompleted(habit.Id, _today)"
+                       Streak="@HabitService.GetCurrentStreak(habit.Id)"
+                       TotalCompletions="@HabitService.GetTotalCompletions(habit.Id)" />
+        }
+    </div>
+}
+
+@code {
+    private List<Habit> _habits = new();
+    private DateOnly _today;
+
+    protected override void OnInitialized()
+    {
+        _habits = HabitService.GetHabits();
+        _today = DateOnly.FromDateTime(DateTime.Now);
+        HabitService.OnChange += RefreshHabits;
+    }
+
+    // Fetch a fresh list so added/deleted habits update the count and empty state.
+    private void RefreshHabits()
+    {
+        _habits = HabitService.GetHabits();
+        _today = DateOnly.FromDateTime(DateTime.Now);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        HabitService.OnChange -= RefreshHabits;
+    }
+}

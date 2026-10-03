@@ -1,0 +1,42 @@
+@* A reusable habit summary. The page supplies the service-calculated stats. *@
+@using Habitually.Models
+
+<article class="flex items-start gap-gap-xl rounded-card border border-border bg-card p-card shadow-card transition-[box-shadow,transform] duration-(--duration-hover) ease-[ease] hover:shadow-card-hover hover:[transform:translateY(var(--card-hover-lift))]"
+         style="--habit-color: @Habit.Color">
+    @* Fixed-width emoji box keeps each card's text and stats aligned. *@
+    <span class="flex size-12 shrink-0 items-center justify-center text-2xl" aria-hidden="true">@Habit.Emoji</span>
+
+    <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-gap-xs">
+            <h2 class="font-display text-lg font-medium text-card-foreground">@Habit.Name</h2>
+            @* Use the habit's stored color, just like the Dashboard checklist. *@
+            <span class="size-gap-xs shrink-0 rounded-full bg-(--habit-color)" aria-hidden="true"></span>
+        </div>
+
+        <p class="mt-gap-2xs font-numeric text-xs text-muted-foreground">
+            <span>@Habit.WeeklyTargetDays× / week</span>
+            @if (IsCompletedToday)
+            {
+                <span> · done today</span>
+            }
+        </p>
+
+        <dl class="mt-gap-md flex gap-gap-xl">
+            <div class="flex flex-col">
+                <dt class="order-2 mt-1 font-numeric text-2xs tracking-widest text-muted-foreground uppercase">STREAK</dt>
+                <dd class="font-display text-2xl leading-none font-bold text-card-foreground">@Streak</dd>
+            </div>
+            <div class="flex flex-col">
+                <dt class="order-2 mt-1 font-numeric text-2xs tracking-widest text-muted-foreground uppercase">TOTAL</dt>
+                <dd class="font-display text-2xl leading-none font-bold text-card-foreground">@TotalCompletions</dd>
+            </div>
+        </dl>
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired] public Habit Habit { get; set; } = default!;
+    [Parameter] public bool IsCompletedToday { get; set; }
+    [Parameter] public int Streak { get; set; }
+    [Parameter] public int TotalCompletions { get; set; }
+}

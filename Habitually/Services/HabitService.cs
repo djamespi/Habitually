@@ -44,6 +44,12 @@ public class HabitService
     /// <summary>How many habits exist.</summary>
     public int GetHabitCount() => _habits.Count;
 
+    /// <summary>All recorded completions for one habit, including today.</summary>
+    public int GetTotalCompletions(Guid habitId)
+    {
+        return _entries.Count(entry => entry.HabitId == habitId);
+    }
+
     /// <summary>How many habits were completed today.</summary>
     public int GetTodayCompletedCount()
     {
